@@ -6,6 +6,7 @@ const request = require('request');
 const async = require('async');
 const mysql = require('mysql');
 const express = require("express");
+const TwitchWebhook = require('twitch-webhook');
 const app = express();
 app.use(express.logger());
 
@@ -240,9 +241,31 @@ app.listen(port, function () {
     console.log("Listening on " + port);
 });
 
-app.get('/', (req , res ) => {
-    res.send('hello world');
+app.get('/streamMessage', (req , res ) => {
+    msg.reply('김주환님이 방송을 키셨습니다.');
 })
 
-
+const twitchWebhook = new TwitchWebhook({
+    client_id: 'auth.twitch_key',
+    callback: 'http://whitecloude.com:3000/streamMessage',
+    secret: 'false', // default: false
+    lease_seconds: 864000,    // default: 864000 (maximum value)
+    listen: {
+        port: 8443,           // default: 8443
+        host: '0.0.0.0',    // default: 0.0.0.0
+        autoStart: true      // default: true
+    }
+})
+twitchWebhook.subscribe('streams', {
+    user_id: '131133352' // ID of Twitch Channel ¯\_(ツ)_/¯
+})
+process.on('SIGINT', () => {
+    // unsubscribe from all topics
+    twitchWebhook.unsubscribe('*')
+  
+    process.exit(0)
+})
+twitchWebhook.on('streams', ({ event }) => {
+    console.log(event)
+})
 client.login(auth.db_private_key);
