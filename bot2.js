@@ -252,7 +252,7 @@ twitchWebhook.on('streams', ({ topic, options, endpoint, event }) => {
     console.log(event);
 
     var options = {
-        url: 'https://api.twitch.tv/kraken/users?login=' + tmpArr[1],
+        url: 'https://api.twitch.tv/kraken/users?login=' + event[0]['user_id'],
         headers: {
             'Accept': 'application/vnd.twitchtv.v5+json',
             'Client-ID': auth.twitch_key
