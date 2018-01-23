@@ -242,7 +242,7 @@ app.listen(port, function () {
 });
 
 app.get('/streamMessage', (req , res ) => {
-    msg.reply('김주환님이 방송을 키셨습니다.');
+    client.channels.get('403834322685001728').send('My Message');
 })
 
 const twitchWebhook = new TwitchWebhook({
