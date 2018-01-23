@@ -228,16 +228,21 @@ client.on('message', msg => {
                     console.log('finish');
                     msg.reply(str);
                 });
-            }
+            }gi
         });
     }
 });
 
 
-var port = process.env.PORT || 5000;
+var port = 3000;
+
 app.listen(port, function () {
     console.log("Listening on " + port);
 });
+
+app.get('/', (req , res ) => {
+    res.send('hello world');
+})
 
 
 client.login(auth.db_private_key);
