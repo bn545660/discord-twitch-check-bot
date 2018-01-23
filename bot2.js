@@ -49,8 +49,13 @@ function checkStream() {
 }
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
-    checkStream();
-    handleDisconnect();
+    var tasks = [
+        handleDisconnect(callback),
+        checkStream(callback)
+    ];
+    async.series(tasks, function (err, r) {
+        console.log('handle');
+    });
 });
 
 client.on('message', msg => {
