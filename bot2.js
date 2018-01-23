@@ -242,7 +242,7 @@ app.listen(port, function () {
 });
 
 app.get('/streamMessage', (req , res ) => {
-    var channel = client.servers.get("name", "My Server").defaultChannel;
+    var channel = client.servers.defaultChannel;
     client.sendMessage(channel, "Hello");
 })
 
