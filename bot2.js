@@ -229,7 +229,7 @@ client.on('message', msg => {
                     console.log('finish');
                     msg.reply(str);
                 });
-            }gi
+            }
         });
     }
 });
@@ -242,7 +242,7 @@ app.listen(port, function () {
 });
 
 app.get('/streamMessage', (req , res ) => {
-    client.channels.get('403834322685001728').sendMessage('My Message');
+    client.sendMessage('403834322685001728', '준하 바보');
 })
 
 const twitchWebhook = new TwitchWebhook({
