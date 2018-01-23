@@ -238,8 +238,6 @@ client.on('message', msg => {
 var port = 3000;
 
 app.get('/streamMessage', (req , res ) => {
-    console.log(req);
-    console.log(res);
     client.channels.get('403834322685001728').send('My Message');
 })
 
@@ -265,5 +263,6 @@ process.on('SIGINT', () => {
 })
 twitchWebhook.on('streams', ({ event }) => {
     console.log(event)
+    client.channels.get('403834322685001728').send('My Message');
 })
 client.login(auth.db_private_key);
