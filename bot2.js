@@ -48,6 +48,7 @@ function checkStream() {
         if (error) throw error;
         for(var i=0;i<result.length;i++){
             console.log('id : ' + result[i].streamid);
+            console.log(twitchWebhook.subscribe);
             twitchWebhook.subscribe('streams', {
                 user_id: result[i].streamid
             })
