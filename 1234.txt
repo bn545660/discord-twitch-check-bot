@@ -1,0 +1,61 @@
+CREATE TRIGGER 'histroy' BEFORE INSERT ON streamers
+FOR EACH ROW
+BEGIN
+insert into streamers_history (streamid, streamname,res_dt,followers,views,is_stream,title,hist_dt) VALUES
+(NEW.streamid,NEW.streamname,NEW.res_dt,NEW.followers,NEW.views,NEW.is_stream,NEW.title,NOW());
+END;
+
+
+insert into streamers_history (streamid, streamname,res_dt,followers,views,is_stream,title,hist_dt) values
+(NEW.streamid,NEW.streamname,NEW.res_dt,NEW.followers,NEW.views,NEW.is_stream,NEW.title,NOW());
+
+
+
+mysql -u WhiteCloude -p set global log_bin_trust_function_creators=1;
+
+mysql -f my_database -u WhiteCloude-p -h  
+my_new_database.xxxxxxxxx.us-east-1.rds.amazonaws.com < my_database.sql
+
+mysql -f -h streamer.ccsfzgkmoc3s.ap-northeast-2.rds.amazonaws.com -P 3306 -u WhiteCloude -p
+
+
+CREATE TRIGGER historyUpdate BEFORE update ON streamers
+       FOR EACH ROW insert into streamers_history (streamid, streamname,res_dt,followers,views,is_stream,title,hist_dt) VALUES (NEW.streamid,NEW.streamname,NEW.res_dt,NEW.followers,NEW.views,NEW.is_stream,NEW.title,NOW());
+
+
+CREATE PROCEDURE Insert_streamer
+(streamid INT, streamName VARCHAR(255), res_dt DATETIME, followers INT, views INT, is_stream BIT, title VARCHAR(255))
+IF EXISTS (select * from streamers where streamid = streamid) THEN
+update streamers
+set
+streamid =streamid,
+streamname = streamName,
+res_dt = NOW(),
+followers = followers,
+views = views,
+is_steram = is_stream,
+title = title
+where streamid = streamid
+ELSE
+
+insert into streamers
+(streamid, streamname, res_dt, followers, views, is_stream, title)
+values (streamid, streamName, NOW(), followers, views, is_stream, title);
+END IF;
+
+
+CREATE TRIGGER historyInsert AFTER insert ON streamers
+for each row update 
+insert into streamers_history (streamid, streamname,res_dt,followers,views,is_stream,title,hist_dt) VALUES (NEW.streamid,NEW.streamname,NEW.res_dt,NEW.followers,NEW.views,NEW.is_stream,NEW.title,NOW());
+
+CREATE TRIGGER historyInsert AFTER INSERT ON streamers
+	FOR EACH ROW
+
+	  INSERT INTO streamers_history (streamid, streamname,res_dt,followers,views,is_stream,title,hist_dt)
+	  VALUES (NEW.streamid,NEW.streamname,NEW.res_dt,NEW.followers,NEW.views,NEW.is_stream,NEW.title,NOW());
+
+
+CREATE TRIGGER historyUpdate AFTER UPDATE ON streamers
+	FOR EACH ROW
+	  INSERT INTO streamers_history (streamid, streamname,res_dt,followers,views,is_stream,title,hist_dt)
+	  VALUES (NEW.streamid,NEW.streamname,NEW.res_dt,NEW.followers,NEW.views,NEW.is_stream,NEW.title,NOW());

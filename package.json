@@ -1,0 +1,14 @@
+{
+    "name": "twitch-stream-bot",
+    "version": "1.0.0",
+    "description": "My own Discord bot",
+    "main": "bot.js",
+    "author": "KimJooHwan",
+    "dependencies": {
+        "async": "^2.6.0",
+        "discord.js": "^11.3.0",
+        "express": "^3.0.6",
+        "mysql": "^2.15.0",
+        "request": "^2.83.0"
+    }
+}
