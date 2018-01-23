@@ -45,26 +45,7 @@ function checkStream() {
     var results = [];
     var query = connection.query('SELECT * FROM streamers ORDER BY followers DESC', function (error, result, fields) { if (error) throw error;  results = result;});
     
-    // Neat!
-    for (var i = 0; i < results.length; i++) {
-        var Options = {
-            url: 'https://api.twitch.tv/kraken/streams/' + results[i]['streamid'],
-            headers: {
-                'Accept': 'application/vnd.twitchtv.v5+json',
-                'Client-ID': auth.twitch_key
-            }
-        };
-
-        request(Options, (err, res, body) => {
-            if (err) { return console.log(err); }
-            var streamResult = JSON.parse(body);
-            if (util.isNullOrUndefined(streamResult['stream']) === boolean.parse(results[i]['is_stream'])) {
-                if (util.isNullOrUndefined(streamResult['stream'])) {
-
-                }
-            }
-        })
-    }
+    console.log(results);
 }
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
@@ -252,6 +233,7 @@ const twitchWebhook = new TwitchWebhook({
         autoStart: true      // default: true
     }
 })
+checkStream();
 twitchWebhook.subscribe('streams', {
     user_id: '131133352' // ID of Twitch Channel ¯\_(ツ)_/¯
 })
