@@ -263,7 +263,7 @@ twitchWebhook.on('streams', ({ topic, options, endpoint, event }) => {
         var result = JSON.parse(body);
         var time = event[0]['started_at'].toString();
         var str = '\n' + result['users'][0]['display_name'] + "의 방송입니다";
-        str += '\n방송 시작 시간은 ' + time.substring(0,10) + ' ' + time.(12,8) + ' 에 시작하였습니다';
+        str += '\n방송 시작 시간은 ' + time.substring(0,10) + ' ' + time.substring(12,8) + ' 에 시작하였습니다';
         str += '\n방송 제목은 ' + event[0]['title'] + '입니다';
         str += '\nhttps://twitch.tv/' + result['users'][0]['name'];
 
