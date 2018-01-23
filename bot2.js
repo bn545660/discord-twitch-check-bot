@@ -237,10 +237,6 @@ client.on('message', msg => {
 
 var port = 3000;
 
-app.listen(port, function () {
-    console.log("Listening on " + port);
-});
-
 app.get('/streamMessage', (req , res ) => {
     console.log(req);
     console.log(res);
@@ -253,7 +249,7 @@ const twitchWebhook = new TwitchWebhook({
     secret: 'false', // default: false
     lease_seconds: 864000,    // default: 864000 (maximum value)
     listen: {
-        port: 8443,           // default: 8443
+        port: 3000,           // default: 8443
         host: '0.0.0.0',    // default: 0.0.0.0
         autoStart: true      // default: true
     }
