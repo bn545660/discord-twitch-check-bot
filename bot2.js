@@ -242,7 +242,7 @@ app.listen(port, function () {
 });
 
 app.get('/streamMessage', (req , res ) => {
-    client.sendMessage('403834322685001728', '준하 바보');
+    client.channels.get('403834322685001728').send('My Message');
 })
 
 const twitchWebhook = new TwitchWebhook({
