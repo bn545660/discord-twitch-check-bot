@@ -29,6 +29,7 @@ function handleDisconnect() {
             console.log('2. error when connecting to db:', err);
             setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
         }                                     	// to avoid a hot loop, and to allow our node script to
+        checkStream();
     });                                     	// process asynchronous requests in the meantime.
     // If you're also serving http, display a 503 error.
     connection.on('error', function (err) {
@@ -48,13 +49,7 @@ function checkStream() {
     console.log(results);
 }
 client.on('ready', () => {
-    console.log(`Logged in as ${client.user.tag}!`);
-    async.waterfall([
-        handleDisconnect,
-        checkStream
-    ], function (error ,success) {
-        if(error) { console.log('error')}
-    })
+    handleDisconnect();
 });
 
 client.on('message', msg => {
