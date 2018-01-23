@@ -49,6 +49,7 @@ function checkStream() {
 }
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
+    checkStream();
     handleDisconnect();
 });
 
@@ -233,7 +234,6 @@ const twitchWebhook = new TwitchWebhook({
         autoStart: true      // default: true
     }
 })
-checkStream();
 twitchWebhook.subscribe('streams', {
     user_id: '131133352' // ID of Twitch Channel ¯\_(ツ)_/¯
 })
