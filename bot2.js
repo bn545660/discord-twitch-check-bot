@@ -64,8 +64,6 @@ function checkStream() {
             }
         })
     }
-
-
 }
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
@@ -240,4 +238,6 @@ var port = process.env.PORT || 5000;
 app.listen(port, function () {
     console.log("Listening on " + port);
 });
+
+
 client.login(auth.db_private_key);
