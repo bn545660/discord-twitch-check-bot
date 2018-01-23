@@ -246,7 +246,7 @@ app.get('/streamMessage', (req , res ) => {
 })
 
 const twitchWebhook = new TwitchWebhook({
-    client_id: 'auth.twitch_key',
+    client_id: auth.twitch_key,
     callback: 'http://whitecloude.com:3000/streamMessage',
     secret: 'false', // default: false
     lease_seconds: 864000,    // default: 864000 (maximum value)
