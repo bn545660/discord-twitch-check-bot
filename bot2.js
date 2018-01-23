@@ -1,3 +1,5 @@
+import { callbackify } from 'util';
+
 const util = require('util');
 const auth = require("./auth.json");
 const Discord = require("discord.js");
@@ -49,13 +51,12 @@ function checkStream() {
 }
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
-    var tasks = [
-        handleDisconnect(),
-        checkStream()
-    ];
-    async.series(tasks, function (err, r) {
-        console.log('handle');
-    });
+    async.waterfall([
+        handleDisconnect,
+        checkStream
+    ], function (error ,success) {
+        if(error) { console.log('error')}
+    })
 });
 
 client.on('message', msg => {
