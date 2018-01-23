@@ -46,15 +46,12 @@ function checkStream() {
     var results = [];
     var query = connection.query('SELECT * FROM streamers ORDER BY followers DESC', function (error, result, fields) { 
         if (error) throw error;
-        console.log(result);
         for(var i=0;i<result.length;i++){
             twitchWebhook.subscribe('streams', {
                 user_id: result[i].streamid
             })
         }
     });
-    
-    console.log(results);
 }
 client.on('ready', () => {
     handleDisconnect();
@@ -241,17 +238,17 @@ const twitchWebhook = new TwitchWebhook({
         autoStart: true      // default: true
     }
 })
-twitchWebhook.subscribe('streams', {
-    user_id: '131133352' // ID of Twitch Channel ¯\_(ツ)_/¯
-})
 process.on('SIGINT', () => {
     // unsubscribe from all topics
     twitchWebhook.unsubscribe('*')
   
     process.exit(0)
 })
-twitchWebhook.on('streams', ({ event }) => {
-    console.log(event)
-    client.channels.get('403834322685001728').send('My Message');
+twitchWebhook.on('streams', ({ topic, options, endpoint, event }) => {
+    console.log(topic);
+    console.log(options);
+    console.log(endpoint);
+    console.log(event);
+    client.channels.get('403834322685001728').send(topic);
 })
 client.login(auth.db_private_key);
