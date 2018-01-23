@@ -1,5 +1,3 @@
-import { callbackify } from 'util';
-
 const util = require('util');
 const auth = require("./auth.json");
 const Discord = require("discord.js");
