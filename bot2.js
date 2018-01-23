@@ -242,6 +242,8 @@ app.listen(port, function () {
 });
 
 app.get('/streamMessage', (req , res ) => {
+    console.log(req);
+    console.log(res);
     client.channels.get('403834322685001728').send('My Message');
 })
 
