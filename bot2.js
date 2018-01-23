@@ -242,7 +242,8 @@ app.listen(port, function () {
 });
 
 app.get('/streamMessage', (req , res ) => {
-    client.channels.get('403834322685001728').send('My Message');
+    var channel = client.servers.get("name", "My Server").defaultChannel;
+    client.sendMessage(channel, "Hello");
 })
 
 const twitchWebhook = new TwitchWebhook({
