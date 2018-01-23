@@ -44,7 +44,16 @@ function handleDisconnect() {
 
 function checkStream() {
     var results = [];
-    var query = connection.query('SELECT * FROM streamers ORDER BY followers DESC', function (error, result, fields) { if (error) throw error;  console.log(results); results = result;});
+    var query = connection.query('SELECT * FROM streamers ORDER BY followers DESC', function (error, result, fields) { 
+        if (error) throw error;
+        console.log(result);
+        for(var i=0;i<result.length;i++){
+            /*twitchWebhook.subscribe('streams', {
+                user_id: 
+            })
+            */
+        }
+    });
     
     console.log(results);
 }
