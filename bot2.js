@@ -248,7 +248,7 @@ process.on('SIGINT', () => {
 })
 twitchWebhook.on('streams', ({ topic, options, endpoint, event }) => {
     if (event) {
-        console.log(event);
+        console.log(event['data']);
         var options = {
             url: 'https://api.twitch.tv/kraken/users?login=' + event[0]['user_id'],
             headers: {
