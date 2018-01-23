@@ -43,7 +43,7 @@ function handleDisconnect() {
 
 function checkStream() {
     var results = [];
-    var query = connection.query('SELECT * FROM streamers ORDER BY followers DESC', function (error, result, fields) { if (error) throw error;  results = result;});
+    var query = connection.query('SELECT * FROM streamers ORDER BY followers DESC', function (error, result, fields) { if (error) throw error;  console.log(results); results = result;});
     
     console.log(results);
 }
