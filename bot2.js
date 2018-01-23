@@ -44,9 +44,9 @@ function handleDisconnect() {
 
 function checkStream() {
     var results = [];
-    var query = connection.query('SELECT * FROM streamers ORDER BY followers DESC', function (error, result, fields) { 
+    var query = connection.query('SELECT * FROM streamers ORDER BY followers DESC', function (error, result, fields) {
         if (error) throw error;
-        for(var i=0;i<result.length;i++){
+        for (var i = 0; i < result.length; i++) {
             console.log('id : ' + result[i].streamid);
             console.log(twitchWebhook.subscribe);
             twitchWebhook.subscribe('streams', {
@@ -225,7 +225,7 @@ client.on('message', msg => {
 
 var port = 3000;
 
-app.get('/streamMessage', (req , res ) => {
+app.get('/streamMessage', (req, res) => {
     client.channels.get('403834322685001728').send('My Message');
 })
 
@@ -243,30 +243,31 @@ const twitchWebhook = new TwitchWebhook({
 process.on('SIGINT', () => {
     // unsubscribe from all topics
     twitchWebhook.unsubscribe('*')
-  
+
     process.exit(0)
 })
 twitchWebhook.on('streams', ({ topic, options, endpoint, event }) => {
-    console.log(event[0])
-    var options = {
-        url: 'https://api.twitch.tv/kraken/users?login=' + event[0]['user_id'],
-        headers: {
-            'Accept': 'application/vnd.twitchtv.v5+json',
-            'Client-ID': auth.twitch_key
-        }
-    };
+    if (event) {
+        console.log(event);
+        var options = {
+            url: 'https://api.twitch.tv/kraken/users?login=' + event[0]['user_id'],
+            headers: {
+                'Accept': 'application/vnd.twitchtv.v5+json',
+                'Client-ID': auth.twitch_key
+            }
+        };
 
-    request(options, (err, res, body) => {
-        if (err) { return console.log(err); }
-        var result = JSON.parse(body);
-        var time = event[0]['started_at'].toString();
-        var str = '\n' + result['users'][0]['display_name'] + "의 방송입니다";
-        str += '\n방송 시작 시간은 ' + time.substring(0,10) + ' ' + time.substring(12,8) + ' 에 시작하였습니다';
-        str += '\n방송 제목은 ' + event[0]['title'] + '입니다';
-        str += '\nhttps://twitch.tv/' + result['users'][0]['name'];
+        request(options, (err, res, body) => {
+            if (err) { return console.log(err); }
+            var result = JSON.parse(body);
+            var time = event[0]['started_at'].toString();
+            var str = '\n' + result['users'][0]['display_name'] + "의 방송입니다";
+            str += '\n방송 시작 시간은 ' + time.substring(0, 10) + ' ' + time.substring(12, 8) + ' 에 시작하였습니다';
+            str += '\n방송 제목은 ' + event[0]['title'] + '입니다';
+            str += '\nhttps://twitch.tv/' + result['users'][0]['name'];
 
-        client.channels.get('403834322685001728').send(str);
-    })
-    
+            client.channels.get('403834322685001728').send(str);
+        })
+    }
 })
 client.login(auth.db_private_key);
