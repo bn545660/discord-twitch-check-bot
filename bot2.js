@@ -254,9 +254,9 @@ twitchWebhook.on('streams', ({ topic, options, endpoint, event }) => {
     console.log('streams on');
     if (event) {
         var eResult = JSON.parse(event);
-        console.log(eResult);
+        console.log(event);
         var options = {
-            url: 'https://api.twitch.tv/kraken/users?login=' + eResult[0]['user_id'],
+            url: 'https://api.twitch.tv/kraken/users?login=' + event[0]['user_id'],
             headers: {
                 'Accept': 'application/vnd.twitchtv.v5+json',
                 'Client-ID': auth.twitch_key
@@ -266,10 +266,10 @@ twitchWebhook.on('streams', ({ topic, options, endpoint, event }) => {
         request(options, (err, res, body) => {
             if (err) { return console.log(err); }
             var result = JSON.parse(body);
-            var time = eResult[0]['started_at'].toString();
+            var time = event[0]['started_at'].toString();
             var str = '\n' + result['users'][0]['display_name'] + "의 방송입니다";
             str += '\n방송 시작 시간은 ' + time.substring(0, 10) + ' ' + time.substring(12, 8) + ' 에 시작하였습니다';
-            str += '\n방송 제목은 ' + eResult[0]['title'] + '입니다';
+            str += '\n방송 제목은 ' + event[0]['title'] + '입니다';
             str += '\nhttps://twitch.tv/' + result['users'][0]['name'];
             console.log('str : ' + str);
             client.channels.get('403834322685001728').send(str);
