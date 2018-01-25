@@ -49,7 +49,7 @@ function checkStream() {
         for (var i = 0; i < result.length; i++) {
             console.log('id : ' + result[i].streamid);
             twitchWebhook.subscribe('streams', {
-                user_id: result[i].streamid
+                user_id: result[i].streamid +''
             })
         }
     });
@@ -245,6 +245,11 @@ process.on('SIGINT', () => {
 
     process.exit(0)
 })
+
+twitchWebhook.subscribe('streams', {
+    user_id: '131133352'
+})
+
 twitchWebhook.on('streams', ({ topic, options, endpoint, event }) => {
     console.log('streams on');
     if (event) {
