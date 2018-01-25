@@ -246,6 +246,7 @@ process.on('SIGINT', () => {
     process.exit(0)
 })
 twitchWebhook.on('streams', ({ topic, options, endpoint, event }) => {
+    console.log('streams on');
     if (event) {
         var eResult = JSON.parse(event);
         console.log(eResult);
@@ -265,7 +266,7 @@ twitchWebhook.on('streams', ({ topic, options, endpoint, event }) => {
             str += '\n방송 시작 시간은 ' + time.substring(0, 10) + ' ' + time.substring(12, 8) + ' 에 시작하였습니다';
             str += '\n방송 제목은 ' + eResult[0]['title'] + '입니다';
             str += '\nhttps://twitch.tv/' + result['users'][0]['name'];
-
+            console.log('str : ' + str);
             client.channels.get('403834322685001728').send(str);
         })
     }
