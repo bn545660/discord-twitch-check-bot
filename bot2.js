@@ -289,7 +289,7 @@ twitchWebhook.on('streams', ({ topic, options, endpoint, event }) => {
 })
 client.login(auth.db_private_key);
 
-cron.schedule('* * * * *', function () {
+cron.schedule('*/5 * * * *', function () {
     var query = connection.query('SELECT * FROM streamers ORDER BY followers DESC', function (error, result, fields) {
         if (error) throw error;
         for (var i = 0; i < result.length; i++) {
