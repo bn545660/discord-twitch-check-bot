@@ -8,6 +8,7 @@ const mysql = require('mysql');
 const express = require("express");
 const TwitchWebhook = require('twitch-webhook');
 const app = express();
+const cron = require('node-cron');
 app.use(express.logger());
 
 var connection;
@@ -287,3 +288,76 @@ twitchWebhook.on('streams', ({ topic, options, endpoint, event }) => {
     }
 })
 client.login(auth.db_private_key);
+
+cron.schedule('*/1 * * * * ', function(){
+    var query = connection.query('SELECT * FROM streamers ORDER BY followers DESC', function (error, result, fields) {
+        if (error) throw error;
+        for (var i = 0; i < result.length; i++) {
+            var options = {
+                url: 'https://api.twitch.tv/kraken/users?login=' + result[i].streamname,
+                headers: {
+                    'Accept': 'application/vnd.twitchtv.v5+json',
+                    'Client-ID': auth.twitch_key
+                }
+            };
+            request(options, (err, res, body) => {
+                if (err) { return console.log(err); }
+                var uResult = JSON.parse(body);
+                if (uResult['_total'] == '0') {
+                    msg.reply('해당하는 스트리머가 없습니다.');
+                }
+                else {
+                    var secondOptions = {
+                        url: 'https://api.twitch.tv/kraken/channels/' + uResult['users'][0]['_id'],
+                        headers: {
+                            'Accept': 'application/vnd.twitchtv.v5+json',
+                            'Client-ID': auth.twitch_key
+                        }
+                    };
+                    var thirdOptions = {
+                        url: 'https://api.twitch.tv/kraken/streams/' + uResult['users'][0]['_id'],
+                        headers: {
+                            'Accept': 'application/vnd.twitchtv.v5+json',
+                            'Client-ID': auth.twitch_key
+                        }
+                    };
+                    var tasks = [
+                        function (callback) {
+                            request(secondOptions, (err, res, body) => {
+                                if (err) { return console.log(err); }
+                                var channelResult = JSON.parse(body);
+                                callback(null, channelResult);
+                            })
+                        },
+                        function (callback) {
+                            request(thirdOptions, (err, res, body) => {
+                                if (err) { return console.log(err); }
+                                var streamResult = JSON.parse(body);
+                                callback(null, streamResult);
+                            })
+                        }
+    
+                    ];
+                    async.series(tasks, function (err, r) {
+                        console.log('finish');
+                        restime = new Date();
+                        console.log(r);
+                        var post = {
+                            streamid: uResult['users'][0]['_id'],
+                            streamname: result[i].streamname,
+                            res_dt: connection.escape(restime),
+                            followers: r[0]['followers'],
+                            views: r[0]['views'],
+                            is_stream: util.isNullOrUndefined(r[1]['stream']) ? false : true,
+                            title: r[0]['status']
+                        };
+                        var query = connection.query('UPDATE streamers SET ?', post, function (error, results, fields) {
+                                if (error) throw error;
+                                // Neat!
+                                msg.reply('\n' + tmpArr[2] + '님의 업데이트가 완료되었습니다.');
+                            });
+                    });
+                }
+        }
+    });
+})
