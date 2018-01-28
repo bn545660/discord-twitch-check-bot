@@ -252,12 +252,11 @@ twitchWebhook.subscribe('streams', {
 
 twitchWebhook.on('streams', ({ topic, options, endpoint, event }) => {
     console.log('streams on');
-    console.log(event);
     console.log(topic);
-    if (event) {
-        console.log(event);
-        console.log(event['data']);
-        eResult = event['data'][0];
+    if (topic) {
+        console.log(topic);
+        console.log(topic['data']);
+        eResult = topic['data'][0];
         var options = {
             url: 'https://api.twitch.tv/kraken/users?login=' +eResult['user_id'],
             headers: {
