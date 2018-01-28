@@ -63,91 +63,96 @@ client.on('message', msg => {
         msg.reply('Pong!');
     }
     else if (msg.content.startsWith('!streamer add')) {
-        var myRole = msg.guild.roles.find("name", "test");
+        var myRole = msg.guild.roles.find("name", "g");
         var tmpArr = msg.content.split(' ');
         if(msg.member.roles.has(myRole.id)) {
-            console.log(`he is test`);
-        } else {
-            console.log(`he is not`);
-        }
-        var options = {
-            url: 'https://api.twitch.tv/kraken/users?login=' + tmpArr[2],
-            headers: {
-                'Accept': 'application/vnd.twitchtv.v5+json',
-                'Client-ID': auth.twitch_key
-            }
-        };
-        request(options, (err, res, body) => {
-            if (err) { return console.log(err); }
-            var result = JSON.parse(body);
-            if (result['_total'] == '0') {
-                msg.reply('해당하는 스트리머가 없습니다.');
-            }
-            else {
-                var secondOptions = {
-                    url: 'https://api.twitch.tv/kraken/channels/' + result['users'][0]['_id'],
-                    headers: {
-                        'Accept': 'application/vnd.twitchtv.v5+json',
-                        'Client-ID': auth.twitch_key
-                    }
-                };
-                var thirdOptions = {
-                    url: 'https://api.twitch.tv/kraken/streams/' + result['users'][0]['_id'],
-                    headers: {
-                        'Accept': 'application/vnd.twitchtv.v5+json',
-                        'Client-ID': auth.twitch_key
-                    }
-                };
-                var tasks = [
-                    function (callback) {
-                        request(secondOptions, (err, res, body) => {
-                            if (err) { return console.log(err); }
-                            var channelResult = JSON.parse(body);
-                            callback(null, channelResult);
-                        })
-                    },
-                    function (callback) {
-                        request(thirdOptions, (err, res, body) => {
-                            if (err) { return console.log(err); }
-                            var streamResult = JSON.parse(body);
-                            callback(null, streamResult);
-                        })
-                    }
-
-                ];
-                async.series(tasks, function (err, r) {
-                    console.log('finish');
-                    restime = new Date();
-                    console.log(r);
-                    var post = {
-                        streamid: result['users'][0]['_id'],
-                        streamname: tmpArr[2],
-                        res_dt: connection.escape(restime),
-                        followers: r[0]['followers'],
-                        views: r[0]['views'],
-                        is_stream: util.isNullOrUndefined(r[1]['stream']) ? false : true,
-                        title: r[0]['status']
+            var options = {
+                url: 'https://api.twitch.tv/kraken/users?login=' + tmpArr[2],
+                headers: {
+                    'Accept': 'application/vnd.twitchtv.v5+json',
+                    'Client-ID': auth.twitch_key
+                }
+            };
+            request(options, (err, res, body) => {
+                if (err) { return console.log(err); }
+                var result = JSON.parse(body);
+                if (result['_total'] == '0') {
+                    msg.reply('해당하는 스트리머가 없습니다.');
+                }
+                else {
+                    var secondOptions = {
+                        url: 'https://api.twitch.tv/kraken/channels/' + result['users'][0]['_id'],
+                        headers: {
+                            'Accept': 'application/vnd.twitchtv.v5+json',
+                            'Client-ID': auth.twitch_key
+                        }
                     };
-                    var query = connection.query('INSERT INTO streamers SET ?'
-                        + 'ON DUPLICATE KEY UPDATE streamid = VALUES(streamid), streamname = VALUES(streamname),res_dt = NOW(),'
-                        + 'followers = VALUES(followers),views = VALUES(views),is_stream = VALUES(is_stream),title = VALUES(title)'
-                        , post, function (error, results, fields) {
-                            if (error) throw error;
-                            // Neat!
-                            msg.reply('\n' + tmpArr[2] + '님의 추가가 완료되었습니다.');
-                        });
-                });
-            }
-        });
+                    var thirdOptions = {
+                        url: 'https://api.twitch.tv/kraken/streams/' + result['users'][0]['_id'],
+                        headers: {
+                            'Accept': 'application/vnd.twitchtv.v5+json',
+                            'Client-ID': auth.twitch_key
+                        }
+                    };
+                    var tasks = [
+                        function (callback) {
+                            request(secondOptions, (err, res, body) => {
+                                if (err) { return console.log(err); }
+                                var channelResult = JSON.parse(body);
+                                callback(null, channelResult);
+                            })
+                        },
+                        function (callback) {
+                            request(thirdOptions, (err, res, body) => {
+                                if (err) { return console.log(err); }
+                                var streamResult = JSON.parse(body);
+                                callback(null, streamResult);
+                            })
+                        }
+    
+                    ];
+                    async.series(tasks, function (err, r) {
+                        console.log('finish');
+                        restime = new Date();
+                        console.log(r);
+                        var post = {
+                            streamid: result['users'][0]['_id'],
+                            streamname: tmpArr[2],
+                            res_dt: connection.escape(restime),
+                            followers: r[0]['followers'],
+                            views: r[0]['views'],
+                            is_stream: util.isNullOrUndefined(r[1]['stream']) ? false : true,
+                            title: r[0]['status']
+                        };
+                        var query = connection.query('INSERT INTO streamers SET ?'
+                            + 'ON DUPLICATE KEY UPDATE streamid = VALUES(streamid), streamname = VALUES(streamname),res_dt = NOW(),'
+                            + 'followers = VALUES(followers),views = VALUES(views),is_stream = VALUES(is_stream),title = VALUES(title)'
+                            , post, function (error, results, fields) {
+                                if (error) throw error;
+                                // Neat!
+                                msg.reply('\n' + tmpArr[2] + '님의 추가가 완료되었습니다.');
+                            });
+                    });
+                }
+            });
+        } else {
+            msg.reply('권한이 없습니다.');
+        }
+        
     }
     else if (msg.content.startsWith('!streamer del')) {
         var tmpArr = msg.content.split(' ');
+        var myRole = msg.guild.roles.find("name", "g");
+        if(msg.member.roles.has(myRole.id)) {
+            var query = connection.query('DELETE FROM streamers where streamname = \'' + tmpArr[2] + '\'', function (error, results, fields) {
+                if (error) throw error;
+                // Neat!
+                msg.reply('\n' + tmpArr[2] + '님의 삭제가 완료되었습니다.');
+            });
+        } else {
+            msg.reply('권한이 없습니다.');
+        }
         
-        var query = connection.query('DELETE FROM streamers where streamname = \'' + tmpArr[2] + '\'', function (error, results, fields) {
-            if (error) throw error;
-            // Neat!
-            msg.reply('\n' + tmpArr[2] + '님의 삭제가 완료되었습니다.');
-        });
     }
     else if (msg.content.startsWith('!streamer list')) {
         var query = connection.query('SELECT * FROM streamers ORDER BY followers DESC', function (error, results, fields) {
