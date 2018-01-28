@@ -252,6 +252,8 @@ twitchWebhook.subscribe('streams', {
 
 twitchWebhook.on('streams', ({ topic, options, endpoint, event }) => {
     console.log('streams on');
+    console.log(event);
+    console.log(topic);
     if (event) {
         console.log(event);
         console.log(event['data']);
@@ -267,6 +269,7 @@ twitchWebhook.on('streams', ({ topic, options, endpoint, event }) => {
         request(options, (err, res, body) => {
             if (err) { return console.log(err); }
             var result = JSON.parse(body);
+            console.log(result)
             var str = '\n' + result['users'][0]['display_name'] + "의 방송입니다";
             str += '\n방송 제목은 ' + eResult['title'] + '입니다';
             str += '\nhttps://twitch.tv/' + result['users'][0]['name'];
