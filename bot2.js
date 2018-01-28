@@ -246,12 +246,7 @@ process.on('SIGINT', () => {
     process.exit(0)
 })
 
-twitchWebhook.subscribe('streams', {
-    user_id: '131133352'
-})
-
 twitchWebhook.on('streams', ({ topic, options, endpoint, event }) => {
-    console.log(event);
     if (event) {
         eResult = event['data'][0];
         var options = {
@@ -265,11 +260,10 @@ twitchWebhook.on('streams', ({ topic, options, endpoint, event }) => {
         request(options, (err, res, body) => {
             if (err) { return console.log(err); }
             var result = JSON.parse(body);
-            console.log(result);
             var str = '\n' + result['users'][0]['display_name'] + "의 방송입니다";
+            str += '\n현재 방송이 시작되었습니다 ';
             str += '\n방송 제목은 ' + eResult['title'] + '입니다';
             str += '\nhttps://twitch.tv/' + result['users'][0]['name'];
-            console.log('str : ' + str);
             client.channels.get('403834322685001728').send(str);
         })
     }
