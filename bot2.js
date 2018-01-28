@@ -63,7 +63,13 @@ client.on('message', msg => {
         msg.reply('Pong!');
     }
     else if (msg.content.startsWith('!streamer add')) {
+        var myRole = msg.guild.roles.find("name", "test");
         var tmpArr = msg.content.split(' ');
+        if(msg.member.roles.has(myRole.id)) {
+            console.log(`he is test`);
+        } else {
+            console.log(`he is not`);
+        }
         var options = {
             url: 'https://api.twitch.tv/kraken/users?login=' + tmpArr[2],
             headers: {
@@ -133,8 +139,15 @@ client.on('message', msg => {
                 });
             }
         });
-
-
+    }
+    else if (msg.content.startsWith('!streamer del')) {
+        var tmpArr = msg.content.split(' ');
+        
+        var query = connection.query('DELETE FROM streamers where streamname = \'' + tmpArr[2] + '\'', function (error, results, fields) {
+            if (error) throw error;
+            // Neat!
+            msg.reply('\n' + tmpArr[2] + '님의 삭제가 완료되었습니다.');
+        });
     }
     else if (msg.content.startsWith('!streamer list')) {
         var query = connection.query('SELECT * FROM streamers ORDER BY followers DESC', function (error, results, fields) {
