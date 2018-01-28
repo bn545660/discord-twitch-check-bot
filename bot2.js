@@ -350,7 +350,8 @@ cron.schedule('* * * * *', function () {
                             is_stream: util.isNullOrUndefined(r[1]['stream']) ? false : true,
                             title: r[0]['status']
                         };
-                        var query = connection.query('UPDATE streamers SET ?', post, function (error, results, fields) {
+                        connection.query(
+                        var query = connection.query('UPDATE streamers SET ? WHERE streamid = :streamid', post, function (error, results, fields) {
                             if (error) throw error;
                             // Neat!
                             msg.reply('\n' + tmpArr[2] + '님의 업데이트가 완료되었습니다.');
