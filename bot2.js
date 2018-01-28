@@ -293,6 +293,7 @@ cron.schedule('* * * * *', function () {
     var query = connection.query('SELECT * FROM streamers ORDER BY followers DESC', function (error, result, fields) {
         if (error) throw error;
         for (var i = 0; i < result.length; i++) {
+            console.log(result[i]);
             var options = {
                 url: 'https://api.twitch.tv/kraken/users?login=' + result[i].streamname,
                 headers: {
