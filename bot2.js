@@ -251,13 +251,9 @@ twitchWebhook.subscribe('streams', {
 })
 
 twitchWebhook.on('streams', ({ topic, options, endpoint, event }) => {
-    console.log(topic);
-    console.log(options);
-    console.log(endpoint);
     console.log(event);
-    /*
-    if (topic) {
-        eResult = topic['data'][0];
+    if (event) {
+        eResult = event['data'][0];
         var options = {
             url: 'https://api.twitch.tv/kraken/users?login=' +eResult['user_id'],
             headers: {
@@ -277,6 +273,5 @@ twitchWebhook.on('streams', ({ topic, options, endpoint, event }) => {
             client.channels.get('403834322685001728').send(str);
         })
     }
-    */
 })
 client.login(auth.db_private_key);
