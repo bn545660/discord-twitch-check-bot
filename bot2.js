@@ -50,7 +50,7 @@ function checkStream() {
         for (var i = 0; i < result.length; i++) {
             console.log('id : ' + result[i].streamid);
             twitchWebhook.subscribe('streams', {
-                user_id: result[i].streamid +''
+                user_id: result[i].streamid + ''
             })
         }
     });
@@ -66,7 +66,7 @@ client.on('message', msg => {
     else if (msg.content.startsWith('!streamer add')) {
         var myRole = msg.guild.roles.find("name", "g");
         var tmpArr = msg.content.split(' ');
-        if(msg.member.roles.has(myRole.id)) {
+        if (msg.member.roles.has(myRole.id)) {
             var options = {
                 url: 'https://api.twitch.tv/kraken/users?login=' + tmpArr[2],
                 headers: {
@@ -110,7 +110,7 @@ client.on('message', msg => {
                                 callback(null, streamResult);
                             })
                         }
-    
+
                     ];
                     async.series(tasks, function (err, r) {
                         console.log('finish');
@@ -139,12 +139,12 @@ client.on('message', msg => {
         } else {
             msg.reply('권한이 없습니다.');
         }
-        
+
     }
     else if (msg.content.startsWith('!streamer del')) {
         var tmpArr = msg.content.split(' ');
         var myRole = msg.guild.roles.find("name", "g");
-        if(msg.member.roles.has(myRole.id)) {
+        if (msg.member.roles.has(myRole.id)) {
             var query = connection.query('DELETE FROM streamers where streamname = \'' + tmpArr[2] + '\'', function (error, results, fields) {
                 if (error) throw error;
                 // Neat!
@@ -153,7 +153,7 @@ client.on('message', msg => {
         } else {
             msg.reply('권한이 없습니다.');
         }
-        
+
     }
     else if (msg.content.startsWith('!streamer list')) {
         var query = connection.query('SELECT * FROM streamers ORDER BY followers DESC', function (error, results, fields) {
@@ -269,7 +269,7 @@ twitchWebhook.on('streams', ({ topic, options, endpoint, event }) => {
     if (event) {
         eResult = event['data'][0];
         var options = {
-            url: 'https://api.twitch.tv/kraken/users?id=' +eResult['user_id'],
+            url: 'https://api.twitch.tv/kraken/users?id=' + eResult['user_id'],
             headers: {
                 'Accept': 'application/vnd.twitchtv.v5+json',
                 'Client-ID': auth.twitch_key
@@ -289,7 +289,7 @@ twitchWebhook.on('streams', ({ topic, options, endpoint, event }) => {
 })
 client.login(auth.db_private_key);
 
-cron.schedule('*/1 * * * * ', function(){
+cron.schedule('*/1 * * * * ', function () {
     var query = connection.query('SELECT * FROM streamers ORDER BY followers DESC', function (error, result, fields) {
         if (error) throw error;
         for (var i = 0; i < result.length; i++) {
@@ -336,7 +336,7 @@ cron.schedule('*/1 * * * * ', function(){
                                 callback(null, streamResult);
                             })
                         }
-    
+
                     ];
                     async.series(tasks, function (err, r) {
                         console.log('finish');
@@ -352,12 +352,13 @@ cron.schedule('*/1 * * * * ', function(){
                             title: r[0]['status']
                         };
                         var query = connection.query('UPDATE streamers SET ?', post, function (error, results, fields) {
-                                if (error) throw error;
-                                // Neat!
-                                msg.reply('\n' + tmpArr[2] + '님의 업데이트가 완료되었습니다.');
-                            });
+                            if (error) throw error;
+                            // Neat!
+                            msg.reply('\n' + tmpArr[2] + '님의 업데이트가 완료되었습니다.');
+                        });
                     });
                 }
+            })
         }
     });
 })
