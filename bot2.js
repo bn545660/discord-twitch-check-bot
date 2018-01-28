@@ -350,7 +350,6 @@ cron.schedule('* * * * *', function () {
                             is_stream: util.isNullOrUndefined(r[1]['stream']) ? false : true,
                             title: r[0]['status']
                         };
-                        connection.query(
                         var query = connection.query('UPDATE streamers SET ? WHERE streamid = :streamid', post, function (error, results, fields) {
                             if (error) throw error;
                             // Neat!
