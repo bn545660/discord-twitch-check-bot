@@ -63,6 +63,15 @@ client.on('message', msg => {
     if (msg.content === 'ping') {
         msg.reply('Pong!');
     }
+    else if (msg.content === '!help') {
+        var str = '안녕하세요 이 봇은 단지 방송 알림과 재성이의 방송 성장 기록을 남기기 위해 만들어졌습니다.';
+        str += '[ !streamer 유저아이디 ] 를 통해 현재 방송중 여부와 방송 상태를 알 수 있습니다.';
+        str += '[ !streamer list] 를 통해 등록되어있는 스트리머의 기록을 알 수 있습니다.';
+        str += '[ !streamer add 유저아이디] 를 통해 스트리머 등록이 가능합니다. # 관리자기능';
+        str += '[ !streamer del 유저아이디] 를 통해 등록된 스트리머 삭제가 가능합니다. # 관리자기능';
+        str += '기능 추가 및 버그 제보는 @whiteCloud#2283 에게 부탁드립니다.';
+        msg.reply(str);
+    }
     else if (msg.content.startsWith('!streamer add')) {
         var myRole = msg.guild.roles.find("name", "g");
         var tmpArr = msg.content.split(' ');
