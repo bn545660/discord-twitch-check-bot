@@ -293,7 +293,6 @@ cron.schedule('* * * * *', function () {
     var query = connection.query('SELECT * FROM streamers ORDER BY followers DESC', function (error, result, fields) {
         if (error) throw error;
         for (var i = 0; i < result.length; i++) {
-            console.log(result[i]);
             var options = {
                 url: 'https://api.twitch.tv/kraken/users?login=' + result[i].streamname,
                 headers: {
@@ -342,10 +341,9 @@ cron.schedule('* * * * *', function () {
                     async.series(tasks, function (err, r) {
                         console.log('finish');
                         restime = new Date();
-                        console.log(r);
                         var post = {
                             streamid: uResult['users'][0]['_id'],
-                            streamname: result[i].streamname,
+                            streamname: r[0]['name'],
                             res_dt: connection.escape(restime),
                             followers: r[0]['followers'],
                             views: r[0]['views'],
