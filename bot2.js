@@ -351,7 +351,7 @@ cron.schedule('* * * * *', function () {
                             uResult['users'][0]['_id'],
                         ];
                         var query = connection.query('UPDATE streamers SET streamname = ?,res_dt = ?,followers = ?,views = ?,is_stream = ?,title = ?' +
-                             'WHERE streamid = :?', post, function (error, results, fields) {
+                             'WHERE streamid = ?', post, function (error, results, fields) {
                             if (error) throw error;
                             // Neat!
                             msg.reply('\n' + tmpArr[2] + '님의 업데이트가 완료되었습니다.');
