@@ -252,10 +252,6 @@ client.on('message', msg => {
 
 var port = 3000;
 
-app.get('/streamMessage', (req, res) => {
-    client.channels.get('403834322685001728').send('My Message');
-})
-
 const twitchWebhook = new TwitchWebhook({
     client_id: auth.twitch_key,
     callback: 'http://whitecloude.com:3000/streamMessage',
@@ -293,6 +289,7 @@ twitchWebhook.on('streams', ({ topic, options, endpoint, event }) => {
             str += '\n방송 제목은 ' + eResult['title'] + '입니다';
             str += '\nhttps://twitch.tv/' + result['users'][0]['name'];
             client.channels.get('403834322685001728').send(str);
+            client.channels.get('403518225574264833').send(str);
         })
     }
     else{
@@ -311,6 +308,7 @@ twitchWebhook.on('streams', ({ topic, options, endpoint, event }) => {
             var str = '\n' + result['users'][0]['display_name'] + "의 방송이 종료되었습니다.";
             str += '\nhttps://twitch.tv/' + result['users'][0]['name'];
             client.channels.get('403834322685001728').send(str);
+            client.channels.get('403518225574264833').send(str);
         })
     }
 })
