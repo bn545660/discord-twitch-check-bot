@@ -350,7 +350,7 @@ cron.schedule('* * * * *', function () {
                             r[0]['status'],
                             uResult['users'][0]['_id'],
                         ];
-                        var query = connection.query('UPDATE streamers SET streamname = :?,res_dt = :?,followers = :?,views = :?,is_stream = :?,title = :?' +
+                        var query = connection.query('UPDATE streamers SET streamname = ?,res_dt = ?,followers = ?,views = ?,is_stream = ?,title = ?' +
                              'WHERE streamid = :?', post, function (error, results, fields) {
                             if (error) throw error;
                             // Neat!
