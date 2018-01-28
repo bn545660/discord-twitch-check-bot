@@ -286,6 +286,24 @@ twitchWebhook.on('streams', ({ topic, options, endpoint, event }) => {
             client.channels.get('403834322685001728').send(str);
         })
     }
+    else{
+        eResult = event['data'][0];
+        var options = {
+            url: 'https://api.twitch.tv/kraken/users?id=' + eResult['user_id'],
+            headers: {
+                'Accept': 'application/vnd.twitchtv.v5+json',
+                'Client-ID': auth.twitch_key
+            }
+        };
+
+        request(options, (err, res, body) => {
+            if (err) { return console.log(err); }
+            var result = JSON.parse(body);
+            var str = '\n' + result['users'][0]['display_name'] + "의 방송이 종료되었습니다.";
+            str += '\nhttps://twitch.tv/' + result['users'][0]['name'];
+            client.channels.get('403834322685001728').send(str);
+        })
+    }
 })
 client.login(auth.db_private_key);
 
