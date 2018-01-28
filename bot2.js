@@ -341,16 +341,17 @@ cron.schedule('* * * * *', function () {
                     async.series(tasks, function (err, r) {
                         console.log('finish');
                         restime = new Date();
-                        var post = {
-                            streamid: uResult['users'][0]['_id'],
-                            streamname: r[0]['name'],
-                            res_dt: connection.escape(restime),
-                            followers: r[0]['followers'],
-                            views: r[0]['views'],
-                            is_stream: util.isNullOrUndefined(r[1]['stream']) ? false : true,
-                            title: r[0]['status']
-                        };
-                        var query = connection.query('UPDATE streamers SET ? WHERE streamid = :streamid', post, function (error, results, fields) {
+                        var post = [
+                            r[0]['name'],
+                            connection.escape(restime),
+                            r[0]['followers'],
+                            r[0]['views'],
+                            util.isNullOrUndefined(r[1]['stream']) ? false : true,
+                            r[0]['status'],
+                            uResult['users'][0]['_id'],
+                        ];
+                        var query = connection.query('UPDATE streamers SET streamname = :?,res_dt = :?,followers = :?,views = :?,is_stream = :?,title = :?' +
+                             'WHERE streamid = :?', post, function (error, results, fields) {
                             if (error) throw error;
                             // Neat!
                             msg.reply('\n' + tmpArr[2] + '님의 업데이트가 완료되었습니다.');
