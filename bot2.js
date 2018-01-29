@@ -172,7 +172,7 @@ client.on('message', msg => {
             if (error) throw error;
             // Neat!
             console.log(results);
-            var str = '';
+            var str = '```';
             str += '현재 총 등록된 스트리머는' + results.length + '명 입니다';
             for (var i = 0; i < results.length; i++) {
                 console.log(results[i]);
@@ -180,6 +180,7 @@ client.on('message', msg => {
                     + results[i]['followers'] + '이며 마지막 방송의 제목은 ' + results[i]['title'] + '입니다';
 
             }
+            str += '```';
             msg.reply(str);
         });
     }
