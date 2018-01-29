@@ -127,6 +127,7 @@ client.on('message', msg => {
                         console.log('finish');
                         restime = new Date();
                         console.log(r);
+                        tmpTitle = util.isNullOrUndefined(r[0]['status']) ? '방제 없음' : r[0]['status'];
                         var post = {
                             streamid: result['users'][0]['_id'],
                             streamname: tmpArr[2],
@@ -134,7 +135,7 @@ client.on('message', msg => {
                             followers: r[0]['followers'],
                             views: r[0]['views'],
                             is_stream: util.isNullOrUndefined(r[1]['stream']) ? false : true,
-                            title: r[0]['status']
+                            title: tmpTitle
                         };
                         var query = connection.query('INSERT INTO streamers SET ?'
                             + 'ON DUPLICATE KEY UPDATE streamid = VALUES(streamid), streamname = VALUES(streamname),res_dt = NOW(),'
@@ -287,8 +288,9 @@ twitchWebhook.on('streams', ({ topic, options, endpoint, event }) => {
             if (err) { return console.log(err); }
             var result = JSON.parse(body);
             var str = '\n' + result['users'][0]['display_name'] + "의 방송입니다";
+            tmpTitle = util.isNullOrUndefined(eResult['title']) ? '방제 없음' : eResult['title'];
             str += '\n현재 방송이 시작되었습니다 ';
-            str += '\n방송 제목은 ' + eResult['title'] + '입니다';
+            str += '\n방송 제목은 ' + tmpTitle + '입니다';
             str += '\nhttps://twitch.tv/' + result['users'][0]['name'];
             client.channels.get('403834322685001728').send(str);
             client.channels.get('403518225574264833').send(str);
@@ -368,13 +370,14 @@ cron.schedule('*/5 * * * *', function () {
                     async.series(tasks, function (err, r) {
                         console.log('finish');
                         restime = new Date();
+                        tmpTitle = util.isNullOrUndefined(r[0]['status']) ? '방제 없음' : r[0]['status'];
                         var post = [
                             r[0]['name'],
                             connection.escape(restime),
                             r[0]['followers'],
                             r[0]['views'],
                             util.isNullOrUndefined(r[1]['stream']) ? false : true,
-                            r[0]['status'],
+                            tmpTitle,
                             uResult['users'][0]['_id'],
                         ];
                         var query = connection.query('UPDATE streamers SET streamname = ?,res_dt = ?,followers = ?,views = ?,is_stream = ?,title = ?' +
