@@ -76,6 +76,7 @@ client.on('message', msg => {
     else if (msg.content.startsWith('!streamer add')) {
         var myRole = msg.guild.roles.find("name", "g");
         var tmpArr = msg.content.split(' ');
+        console.log(myRole);
         if (msg.member.roles.has(myRole.id)) {
             var options = {
                 url: 'https://api.twitch.tv/kraken/users?login=' + tmpArr[2],
