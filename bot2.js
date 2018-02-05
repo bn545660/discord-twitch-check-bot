@@ -42,7 +42,7 @@ function handleDisconnect() {
         }
     });
 }
-
+// DB에 등록되어 있는 스트리머 목록을 가져와 봇에 등록
 function checkStream() {
     var results = [];
     var query = connection.query('SELECT * FROM streamers ORDER BY followers DESC', function (error, result, fields) {
@@ -55,17 +55,19 @@ function checkStream() {
         }
     });
 }
+// 봇이 정상적으로 켜지면 DB 연결
 client.on('ready', () => {
     handleDisconnect();
 });
-
+// 메시지가 도착했을때 해당하는 명령어가 있으면 실행
 client.on('message', msg => {
     console.log(msg.content);
+    // 봇 체크용 명령어
     if (msg.content === 'ping') {
         msg.reply('Pong!');
     }
     else if (msg.content === '!help') {
-        var str = '안녕하세요 이 봇은 단지 방송 알림과 재성이의 방송 성장 기록을 남기기 위해 만들어졌습니다.';
+        var str = '';
         str += '\n[ !streamer 유저아이디 ] 를 통해 현재 방송중 여부와 방송 상태를 알 수 있습니다.';
         str += '\n[ !streamer list] 를 통해 등록되어있는 스트리머의 기록을 알 수 있습니다.';
         str += '\n[ !streamer add 유저아이디] 를 통해 스트리머 등록이 가능합니다. # 관리자기능';
@@ -74,7 +76,7 @@ client.on('message', msg => {
         msg.reply(str);
     }
     else if (msg.content.startsWith('!streamer add')) {
-        var myRole = msg.guild.roles.find("name", "g");
+        var myRole = msg.guild.roles.find("name", "g"); // 권한 확인
         var tmpArr = msg.content.split(' ');
         console.log(myRole);
         if (msg.member.roles.has(myRole.id)) {
@@ -84,8 +86,8 @@ client.on('message', msg => {
                     'Accept': 'application/vnd.twitchtv.v5+json',
                     'Client-ID': auth.twitch_key
                 }
-            };
-            request(options, (err, res, body) => {
+            };  // 트위치 api 요청
+            request(options, (err, res, body) => {  // 리퀘스트 요청 후 정상적인 값 도달시 작업 실행
                 if (err) { return console.log(err); }
                 var result = JSON.parse(body);
                 if (result['_total'] == '0') {
